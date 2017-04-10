@@ -27,7 +27,7 @@
   "dependencies": {
     "archiver": "^1.2.0",
     "readable-stream": "^2.1.5",
-    "s3-files": "git+https://github.com/ardencod3/s3-files.git",
+    "s3-files": "git+https://github.com/ardencod3/s3-files.git"
   },
   "devDependencies": {
     "concat-stream": "^1.5.2",
