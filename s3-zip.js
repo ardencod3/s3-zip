@@ -47,6 +47,10 @@ s3Zip.archiveStream = function (stream, filesS3, filesZip) {
      console.log('end -> finalize')
      archive.finalize()
    })
+   .on('error', (err) => {
+    console.log('don\'t append to zip s3-zip error -> ',err.message);     
+    return ;
+   });
 
   return archive
 }
