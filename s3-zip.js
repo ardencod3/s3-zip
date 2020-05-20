@@ -25,32 +25,37 @@ s3Zip.archiveStream = function (stream, filesS3, filesZip) {
     throw err
   })
   stream
-   .on('data', function (file) {
+    .on('data', function (file) {
       // console.log(file.data.toString());
-     if (file.path[file.path.length - 1] === '/') {
-       console.log('don\'t append to zip', file.path)
-       return
-     }
-     var fname
-     if (filesZip) {
-       // Place files_s3[i] into the archive as files_zip[i]
-       var i = filesS3.list.indexOf(file.path)
-       fname = (i >= 0 && i < filesZip.length) ? filesZip[i] : file.path
-     } else {
-       // Just use the S3 file name
-       fname = file.path
-     }
-     console.log('append to zip', fname)
-     archive.append(file.data, { name: fileInPath(fname,filesS3) + fname })
-   })
-   .on('end', function () {
-     console.log('end -> finalize')
-     archive.finalize()
-   })
-   .on('error', (err) => {
-    console.log('don\'t append to zip s3-zip error -> ',err.message);     
-    return ;
-   });
+      if (file.path[file.path.length - 1] === '/') {
+        console.log('don\'t append to zip', file.path)
+        return
+      }
+      var fname
+      if (filesZip) {
+        // Place files_s3[i] into the archive as files_zip[i]
+        var i = filesS3.list.indexOf(file.path)
+        fname = (i >= 0 && i < filesZip.length) ? filesZip[i] : file.path
+      } else {
+        // Just use the S3 file name
+        fname = file.path
+      }
+      console.log('append to zip', fname)
+      archive.append(file.data, { name: fileInPath(fname, filesS3) + fname })
+    })
+    .on('end', function () {
+      console.log('end -> finalize')
+      archive.finalize()
+    })
+    .on('error', (err) => {
+      try {
+        console.log('don\'t append to zip s3-zip error -> ', err.message);
+        throw err
+      } catch (error) {
+        console.log('catch ', error);
+      }
+      return;
+    });
 
   return archive
 }
